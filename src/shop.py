@@ -4,7 +4,7 @@ from constants import TowerConstants
 from image_loader import load_images, ShopType, TowerType
 from map_sys import show_map, map
 from money import money_script
-from mouse import mouse_info
+from mouse import MouseInfo
 from tower import Towers, towers
 from fonts import font_25, font_16
 
@@ -55,9 +55,7 @@ class Shop(pygame.sprite.Sprite):
 
     # checks whether the mouse is hovering over the shop panel and changes the panel accordingly
     def hovering(self):
-        mouse_xy = mouse_info()[0]
-
-        if self.rect.collidepoint(mouse_xy):
+        if self.rect.collidepoint(MouseInfo.get_mouse_xy()):
             self.open = True
             self.rect.centery = 700
         else:
@@ -72,8 +70,6 @@ class Shop(pygame.sprite.Sprite):
     def showing(self, open : bool):
         money = money_script(None, 0)
 
-        mouse_xy, mouse_down = mouse_info()
-
         hovering_on_tower = False
 
         if open:
@@ -81,13 +77,13 @@ class Shop(pygame.sprite.Sprite):
             screen.blit(self.text, (self.rect.centerx-self.text.get_width()/2, self.rect.centery+self.rect.height/2))
 
             # if the mouse is down when hovering over an item in the shop, it will wait until mouse not down, and attempt to buy that item
-            if self.rect.collidepoint(mouse_xy):
+            if self.rect.collidepoint(MouseInfo.get_mouse_xy()):
                 # hovering_on_tower used to determine whether to show tower stats
                 hovering_on_tower = True
                 if money >= self.cost:
-                    if mouse_down and not self.clicked:
+                    if MouseInfo.get_left_click() and not self.clicked:
                         self.clicked = True
-                    elif not mouse_down and self.clicked:
+                    elif not MouseInfo.get_left_click() and self.clicked:
                         self.clicked = False
                         return True, hovering_on_tower, self.cost, self.description, self.shop
             else:
@@ -97,10 +93,8 @@ class Shop(pygame.sprite.Sprite):
         
     # if the user bought a tower from the shop, it will follow the mouse until placed
     def place_tower(self):
-        mouse_xy, mouse_down = mouse_info()
-
-        self.rect.centerx = mouse_xy[0]
-        self.rect.centery = mouse_xy[1]
+        self.rect.centerx = MouseInfo.get_mouse_xy()[0]
+        self.rect.centery = MouseInfo.get_mouse_xy()[1]
         screen.blit(self.image, self.rect)
 
         mask1 = pygame.mask.from_surface(self.image)
@@ -112,9 +106,9 @@ class Shop(pygame.sprite.Sprite):
         colliding = mask1.overlap(mask2, (offset_x, offset_y))
         
         # waits to place tower until mouse down and not touching track, it then waits for mouse release to place
-        if mouse_down and not colliding:
+        if MouseInfo.get_left_click() and not colliding:
             self.clicked = True
-        elif not mouse_down and self.clicked:
+        elif not MouseInfo.get_left_click() and self.clicked:
             self.clicked = False
             towers.add(Towers(self.shop, self.rect.centerx, self.rect.centery))
             self.rect.centerx = self.original_x
@@ -125,9 +119,7 @@ class Shop(pygame.sprite.Sprite):
     
     def show_stats(self, open : bool, hovering_on_tower : bool, tower_stats : list[pygame.Surface]|None):
         if open and hovering_on_tower:
-            mouse_xy = mouse_info()[0]
-
-            self.rect.bottomleft = mouse_xy
+            self.rect.bottomleft = MouseInfo.get_mouse_xy()
             screen.blit(self.image, self.rect)
             if tower_stats != None:
                 for i in range(len(tower_stats)):

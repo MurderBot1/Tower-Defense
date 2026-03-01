@@ -10,7 +10,7 @@ if __name__ == "__main__":
     from money import money_script
     from image_loader import TowerType
     from tower_projectiles import tower_projectiles
-    from mouse import mouse_info, clicked_and_released
+    from mouse import MouseInfo
     from fonts import font_30, font_50
     from map_sys import select_map, map
     from constants import stat_constants
@@ -110,18 +110,16 @@ if __name__ == "__main__":
             pygame.draw.rect(screen, (100, 100, 100), border, 10, 25)
             pygame.draw.rect(screen, (180, 180, 180), settings_rect)
             screen.blit(play, play_location)
-            mouse = mouse_info()
-            pressed, clicked = clicked_and_released(mouse[1], clicked)
-            if play_rect.collidepoint(mouse[0]) and pressed:
+            pressed, clicked = MouseInfo.clicked_and_released(MouseInfo.get_left_click(), clicked)
+            if play_rect.collidepoint(MouseInfo.get_mouse_xy()) and pressed:
                 game_screen = GameScreen.IN_GAME
-            elif settings_rect.collidepoint(mouse[0]) and pressed:
+            elif settings_rect.collidepoint(MouseInfo.get_mouse_xy()) and pressed:
                 game_screen = GameScreen.SETTINGS
 
         elif game_screen == GameScreen.SETTINGS:
             pygame.draw.rect(screen, (180, 180, 180), settings_rect)
-            mouse = mouse_info()
-            pressed, clicked = clicked_and_released(mouse[1], clicked)
-            if settings_rect.collidepoint(mouse[0]) and pressed:
+            pressed, clicked = MouseInfo.clicked_and_released(MouseInfo.get_left_click(), clicked)
+            if settings_rect.collidepoint(MouseInfo.get_mouse_xy()) and pressed:
                 game_screen = GameScreen.MAIN_MENU
             # TODO: add settings
 
