@@ -4,7 +4,6 @@ from PyInstaller.utils.hooks import collect_submodules, collect_dynamic_libs
 
 block_cipher = None
 
-# Add all dependencies your project actually uses.
 DEPENDENCIES = [
     "psutil",
     "pygame",
@@ -14,12 +13,10 @@ DEPENDENCIES = [
 hiddenimports = []
 binaries = []
 
-# Collect submodules + dynamic libraries for each dependency.
 for dep in DEPENDENCIES:
     hiddenimports += collect_submodules(dep)
     binaries += collect_dynamic_libs(dep)
 
-# Exclude Python's internal test modules (these contain invalid encodings).
 EXCLUDED_MODULES = [
     "test",
     "tkinter.test",
@@ -34,8 +31,8 @@ hiddenimports = [
 ]
 
 a = Analysis(
-    ['src/main.py'],          # Entry point
-    pathex=['src'],           # Include your entire src/ directory
+    ['src/main.py'],
+    pathex=['src'],
     binaries=binaries,
     datas=[],
     hiddenimports=hiddenimports,
