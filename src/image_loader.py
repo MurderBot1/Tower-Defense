@@ -6,14 +6,21 @@ import os
 
 
 # Resolve paths correctly when running under PyInstaller
-def get_resource_path_using_Path(relative_path: Path) -> str:
-    return resource_path(str(relative_path))
-
 def resource_path(relative_path: str) -> str:
     if hasattr(sys, "_MEIPASS"):
         return os.path.join(sys._MEIPASS, relative_path) # type: ignore
     return relative_path
 
+
+def get_resource_path(relative_path : Path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = Path(sys._MEIPASS) # type: ignore
+    except Exception:
+        base_path = Path(".").absolute()
+
+    return base_path / relative_path
 
 # finds the image paths
 def image_paths(type: str, sub_type: Enum | None):
