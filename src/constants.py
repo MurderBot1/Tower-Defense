@@ -26,4 +26,4 @@ class TargetingStates(Enum):
     CLOSE = 1
     FIRST = 2
     LAST = 3
-    STRONG = 4
+    STRONG = 4 
