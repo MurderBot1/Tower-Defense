@@ -2,11 +2,13 @@ import pygame, sys
 from enum import Enum
 from pathlib import Path
 from typing import Mapping
-import sys
 import os
 
 
 # Resolve paths correctly when running under PyInstaller
+def get_resource_path_using_Path(relative_path: Path) -> str:
+    return resource_path(str(relative_path))
+
 def resource_path(relative_path: str) -> str:
     if hasattr(sys, "_MEIPASS"):
         return os.path.join(sys._MEIPASS, relative_path) # type: ignore
