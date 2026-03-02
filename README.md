@@ -1,6 +1,16 @@
 # Tower-Defense
 
-**WARNING:** You will not be able to play this game without having Python and Pygame installed
+## Downloading the game
+1. Go to the releases section
+2. Download your OS's version
+3. Extract it
+4. Open the terminal
+5. run the executable from the root directory of the project
+
+On Windows in powershell
+```
+./src/tower-defense.exe
+```
 
 ## Install the source code with
 ```
