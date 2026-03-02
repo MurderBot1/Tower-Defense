@@ -1,4 +1,4 @@
-import pygame
+import pygame, sys
 from enum import Enum
 from pathlib import Path
 from typing import Mapping
