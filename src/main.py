@@ -213,7 +213,7 @@ if __name__ == "__main__":
                 upgrade_cost : int = int(LoadGame.upgrade_info[0])
                 money_script(False, upgrade_cost)
 
-                current_stat = getattr(tower_list[open_index], LoadGame.upgrading)
+                current_stat = getattr(tower_list[open_index], LoadGame.upgrading) # gets the stat that's being upgraded
                 setattr(tower_list[open_index], LoadGame.upgrading, current_stat*LoadGame.upgrade_info[2]) # multiplies the stat by the upgrade' stat modifier
         
                 if str(LoadGame.upgrade_info[3]).find(".1") != -1:
@@ -267,6 +267,6 @@ if __name__ == "__main__":
 
         pygame.display.flip()
         LoadGame.clock.tick(60)
-        print(LoadGame.clock.get_fps())
+        #print(LoadGame.clock.get_fps())
 
     pygame.quit()

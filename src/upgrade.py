@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any
 from image_loader import load_images, UpgradeType, TowerType
 from upgrade_loader import load_upgrades
 from money import money_script
-from mouse import mouse_info
+from mouse import mouse_info, clicked_and_released
 from fonts import font_30, font_25
 
 tower_images, upgrade_images = load_images(["tower", "upgrade"])
@@ -80,16 +80,12 @@ class Upgrades(pygame.sprite.Sprite):
             for i in range(len(text_info[tower_tier*2-1])):            
                 screen.blit(text_info[tower_tier*2-1][i], (self.rect.x+7, self.rect.y+88+25*i))
 
-            if self.rect.collidepoint(mouse_xy) and mouse_down and money >= int(upgrade_info[tower_tier*2-2][0]) and not upgraded[0]:
-                self.clicked = True
-            elif self.rect.collidepoint(mouse_xy) and not mouse_down and self.clicked:
-                self.clicked = False
+            pressed, self.clicked = clicked_and_released(mouse_down, self.clicked)
+
+            if self.rect.collidepoint(mouse_xy) and pressed and money >= int(upgrade_info[tower_tier*2-2][0]) and not upgraded[0]:
                 return upgrade_info[tower_tier*2-2]
             
-            if pygame.Rect(self.rect.x, self.rect.y+80, self.rect.width, self.rect.height).collidepoint(mouse_xy) and mouse_down and money >= int(upgrade_info[tower_tier*2-1][0]) and not upgraded[1]:
-                self.clicked = True
-            elif pygame.Rect(self.rect.x, self.rect.y+80, self.rect.width, self.rect.height).collidepoint(mouse_xy) and not mouse_down and self.clicked:
-                self.clicked = False
+            if pygame.Rect(self.rect.x, self.rect.y+80, self.rect.width, self.rect.height).collidepoint(mouse_xy) and pressed and money >= int(upgrade_info[tower_tier*2-1][0]) and not upgraded[1]:
                 return upgrade_info[tower_tier*2-1]
     
         return upgrade_info_placeholder
