@@ -29,14 +29,34 @@ jobs:
           pip install pyinstaller
 
       - name: Build executable
+        run: python -m PyInstaller main.spec
+
+      - name: Prepare packaged directory
+        shell: bash
         run: |
-          python -m PyInstaller main.spec
+          OSNAME="${{ matrix.os }}"
+          PKG_DIR="Tower-Defense-${OSNAME}"
+          mkdir -p "$PKG_DIR/exe"
+          mkdir -p "$PKG_DIR/assets"
+
+          # Move executable
+          if [[ "$OSNAME" == "windows-latest" ]]; then
+            mv dist/tower-defense.exe "$PKG_DIR/exe/"
+          else
+            mv dist/tower-defense "$PKG_DIR/exe/"
+          fi
+
+          # Copy assets
+          cp -r assets/* "$PKG_DIR/assets/"
+
+          # Zip it
+          zip -r "${PKG_DIR}.zip" "$PKG_DIR"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-${{ matrix.os }}
-          path: dist/*
+          name: package-${{ matrix.os }}
+          path: Tower-Defense-${{ matrix.os }}.zip
 
   release:
     name: Create Release
@@ -62,32 +82,32 @@ jobs:
           draft: false
           prerelease: true
 
-      - name: Upload Linux binary
+      - name: Upload Linux package
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: builds/build-ubuntu-latest/tower-defense
-          asset_name: tower-defense-linux
-          asset_content_type: application/octet-stream
+          asset_path: builds/package-ubuntu-latest/Tower-Defense-ubuntu-latest.zip
+          asset_name: Tower-Defense-linux.zip
+          asset_content_type: application/zip
 
-      - name: Upload macOS binary
+      - name: Upload macOS package
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: builds/build-macos-latest/tower-defense
-          asset_name: tower-defense-macos
-          asset_content_type: application/octet-stream
+          asset_path: builds/package-macos-latest/Tower-Defense-macos-latest.zip
+          asset_name: Tower-Defense-macos.zip
+          asset_content_type: application/zip
 
-      - name: Upload Windows exe
+      - name: Upload Windows package
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: builds/build-windows-latest/tower-defense.exe
-          asset_name: tower-defense-windows.exe
-          asset_content_type: application/octet-stream
+          asset_path: builds/package-windows-latest/Tower-Defense-windows-latest.zip
+          asset_name: Tower-Defense-windows.zip
+          asset_content_type: application/zip
