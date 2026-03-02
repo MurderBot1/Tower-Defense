@@ -20,7 +20,9 @@ def image_paths(type : str, sub_type : Enum|None):
     else:
         image_folder = Path(f"assets/{type}_images")
 
+    print(image_folder)
     image_folder = get_resource_path(image_folder)
+    print(image_folder)
 
     images = list(image_folder.glob("*.png"))
     return images
