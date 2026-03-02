@@ -1,0 +1,20 @@
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+# Only format Python files inside src/
+include = '^src/.*\.py$'
+
+# Optional: ignore build artifacts or virtual envs
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.venv
+  | build
+  | dist
+  | __pycache__
+)/
+'''
